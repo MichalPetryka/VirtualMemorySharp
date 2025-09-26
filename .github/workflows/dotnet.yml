@@ -35,4 +35,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore -f ${{ matrix.framework }}
     - name: Test
-      run: dotnet test --no-build --verbosity detailed -f ${{ matrix.framework }} -a ${{ matrix.arch }}
+      run: dotnet test --output Detailed -f ${{ matrix.framework }} -a ${{ matrix.arch }}
