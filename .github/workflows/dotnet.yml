@@ -2,7 +2,10 @@ name: .NET Tests
 on: [push, pull_request]
 jobs:
   build:
-    runs-on: [windows-latest, ubuntu-latest, macos-latest, macos-15-intel]
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest, macos-15-intel]
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
