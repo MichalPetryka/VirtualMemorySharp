@@ -6,23 +6,21 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest, macos-15-intel]
         framework: [net10.0]
+        arch: [x64]
         include:
           - os: windows-latest
-            runtime: win-x64
-          - os: windows-latest
-            runtime: win-x86
+            arch: x86
           - os: windows-latest
             framework: net48
-            runtime: win-x64
+            arch: x64
           - os: windows-latest
             framework: net48
-            runtime: win-x86
-          - os: ubuntu-latest
-            runtime: linux-x64
+            arch: x86
           - os: macos-latest
-            runtime: macos-arm64
-          - os: macos-15-intel
-            runtime: macos-x64
+            arch: arm64
+        exclude:
+          - os: macos-latest
+            arch: x64
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
@@ -33,6 +31,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore -r ${{ matrix.runtime }}
     - name: Build
-      run: dotnet build --no-restore -f ${{ matrix.framework }} -r ${{ matrix.runtime }}
+      run: dotnet build --no-restore -f ${{ matrix.framework }}
     - name: Test
-      run: dotnet test --no-build --verbosity detailed -f ${{ matrix.framework }} -r ${{ matrix.runtime }}
+      run: dotnet test --no-build --verbosity detailed -f ${{ matrix.framework }} -a ${{ matrix.arch }}
