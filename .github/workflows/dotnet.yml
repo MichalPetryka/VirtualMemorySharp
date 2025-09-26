@@ -5,11 +5,11 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest, macos-15-intel]
-        framework: [net10.0]
+        framework: [net8.0]
         arch: [x64]
         include:
           - os: windows-latest
-            framework: net10.0
+            framework: net8.0
             arch: x86
           - os: windows-latest
             framework: net48
@@ -18,7 +18,7 @@ jobs:
             framework: net48
             arch: x86
           - os: macos-latest
-            framework: net10.0
+            framework: net8.0
             arch: arm64
         exclude:
           - os: macos-latest
