@@ -18,11 +18,19 @@ jobs:
           - os: macos-latest
             framework: net10.0
             arch: arm64
+          - arch: x64
+            install_arch: AMD64
+          - arch: x86
+            install_arch: x86
+          - arch: arm64
+            install_arch: ARM64
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
+      env:
+        PROCESSOR_ARCHITECTURE: ${{ matrix.install_arch }}
       with:
         dotnet-version: 10.0
     - if: startsWith(matrix.os , 'ubuntu') == true && matrix.framework == 'net48'
