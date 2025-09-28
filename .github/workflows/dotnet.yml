@@ -24,7 +24,7 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 10.0
-    - if: startsWith(matrix.os , 'ubuntu') == true
+    - if: startsWith(matrix.os , 'ubuntu') == true && matrix.framework == 'net48'
       name: Setup Mono on Ubuntu
       run: |
         sudo apt install ca-certificates gnupg
@@ -33,10 +33,10 @@ jobs:
         echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
         sudo apt update
         sudo apt install mono-complete
-    - if: startsWith(matrix.os, 'macos') == true
+    - if: startsWith(matrix.os, 'macos') == true && matrix.framework == 'net48'
       name: Setup Mono on MacOS
       run: brew install mono
-    - if: startsWith(matrix.os, 'windows') != true
+    - if: startsWith(matrix.os, 'windows') != true && matrix.framework == 'net48'
       name: Check Mono
       run: mono --version
     - name: Restore dependencies
