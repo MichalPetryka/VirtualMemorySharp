@@ -5,7 +5,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest, macos-15-intel]
-        framework: [net10.0]
+        framework: [net10.0, net48]
         arch: [x64]
         include:
           - os: windows-latest
@@ -13,16 +13,10 @@ jobs:
             arch: x86
           - os: windows-latest
             framework: net48
-            arch: x64
-          - os: windows-latest
-            framework: net48
             arch: x86
           - os: macos-latest
             framework: net10.0
             arch: arm64
-        exclude:
-          - os: macos-latest
-            arch: x64
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
@@ -30,6 +24,21 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 10.0
+    - if: startsWith(${{ matrix.os }}, 'ubuntu')
+      name: Setup Mono on Ubuntu
+      run: |
+        apt install ca-certificates gnupg
+        gpg --homedir /tmp --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/mono-official-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        chmod +r /usr/share/keyrings/mono-official-archive-keyring.gpg
+        echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] https://download.mono-project.com/repo/ubuntu stable-focal main" | tee /etc/apt/sources.list.d/mono-official-stable.list
+        apt update
+        apt install mono-complete
+    - if: startsWith(${{ matrix.os }}, 'macos')
+      name: Setup Mono on MacOS
+      run: brew install mono
+    - if: startsWith(${{ matrix.os }}, 'macos')
+      name: Check Mono
+      run: mono --version
     - name: Restore dependencies
       run: dotnet restore -a ${{ matrix.arch }}
     - name: Test
