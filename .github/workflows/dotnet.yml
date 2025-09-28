@@ -43,4 +43,5 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore -a ${{ matrix.arch }}
     - name: Test
+      working-directory: ./VirtualMemorySharp.Tests
       run: dotnet test --output Detailed -f ${{ matrix.framework }} -a ${{ matrix.arch }}
